@@ -3,23 +3,15 @@ import { binarize } from "../libs/jsQR/binarizer";
 
 var video = document.createElement("video");
 
-function toString(point: Point) {
+function toString(point: Point): string {
   return `(${point.x}|${point.y})`;
 }
 
-function qr(imageData: { data: Uint8ClampedArray; width: number; height: number; }) {
-  const binarizedBitMatrix = binarize(imageData.data, imageData.width, imageData.height, false);
-    let locations = locate(binarizedBitMatrix.binarized);
-    
-    if (locations){
-      
-      let location = locations[0];
-      console.log(`Location: 
-        ${toString(location.topLeft)} 
-        ${toString(location.topRight)} 
-        ${toString(location.bottomLeft)}`
-      );
-    }
+function scalePoint(point: Point, scaleWidgh: number, scaleHeight: number): Point {
+  let result = point;
+  result.x = result.x * scaleWidgh;
+  result.y = result.y * scaleHeight;
+  return result;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -52,26 +44,33 @@ document.addEventListener('DOMContentLoaded', function() {
         
         var third = performance.now() - second - first - start;
         var imageData = sketch.getImageData(0, 0, sketchElement.width, sketchElement.height);
-
         const binarizedBitMatrix = binarize(imageData.data, imageData.width, imageData.height, false);
         let locations = locate(binarizedBitMatrix.binarized);
         var fourth = performance.now() - third - second - first - start;
 
         if (locations) {          
           let location = locations[0];
+          let scaleWidth = canvasElement.width / sketchElement.width;
+          let scaleHeight = canvasElement.height / sketchElement.height;
           console.log(`Location: 
             ${toString(location.topLeft)} 
             ${toString(location.topRight)} 
             ${toString(location.bottomLeft)}`);
-          // this.drawLine(location.topLeft, location.topRight, "#FF0000");
-          // this.drawLine(location.topRight, location.bottomRight, "#FF0000");
-          // this.drawLine(location.bottomRight, location.bottomLeft, "#FF0000");
-          // this.drawLine(location.bottomLeft, location.topLeft, "#FF0000");
+          drawLine(scalePoint(location.topLeft, scaleWidth, scaleHeight), scalePoint(location.topRight, scaleWidth, scaleHeight), "#FF0000");
+          drawLine(scalePoint(location.bottomLeft, scaleWidth, scaleHeight), scalePoint(location.topLeft, scaleWidth, scaleHeight), "#00FF00");
         }
         console.log(`${first} | ${second} | ${third} | ${fourth}`);
-        // qr(video.data);
     }
   
     requestAnimationFrame(tick);
+  }
+
+  function drawLine(begin, end, color) {
+    canvas.beginPath();
+    canvas.moveTo(begin.x, begin.y);
+    canvas.lineTo(end.x, end.y);
+    canvas.lineWidth = 4;
+    canvas.strokeStyle = color;
+    canvas.stroke();
   }
 });
