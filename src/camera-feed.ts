@@ -25,6 +25,8 @@ function qr(imageData: { data: Uint8ClampedArray; width: number; height: number;
 document.addEventListener('DOMContentLoaded', function() {
   var canvasElement = <HTMLCanvasElement>document.getElementById("overlayCanvas");
   var canvas = canvasElement.getContext("2d");
+  var sketchElement = <HTMLCanvasElement>document.getElementById("sketchPad")
+  var sketch = sketchElement.getContext("2d");
 
   var constraints = { video: { facingMode: "environment" } }; // 'environment' for rear-facing camera
   navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
@@ -39,18 +41,22 @@ document.addEventListener('DOMContentLoaded', function() {
         canvasElement.hidden = false;
         canvasElement.height = window.innerHeight;
         canvasElement.width = window.innerWidth;
+        sketchElement.height = video.videoHeight;
+        sketchElement.width = video.videoWidth;
 
         var start = performance.now();
         canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
         var first = performance.now() - start;
-  
-        var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+        sketch.drawImage(video, 0, 0, sketchElement.width, sketchElement.height);
         var second = performance.now() - first - start;
+        
+        var third = performance.now() - second - first - start;
+        var imageData = sketch.getImageData(0, 0, sketchElement.width, sketchElement.height);
 
         const binarizedBitMatrix = binarize(imageData.data, imageData.width, imageData.height, false);
         let locations = locate(binarizedBitMatrix.binarized);
-        var third = performance.now() - second - first - start;
-        
+        var fourth = performance.now() - third - second - first - start;
+
         if (locations) {          
           let location = locations[0];
           console.log(`Location: 
@@ -62,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // this.drawLine(location.bottomRight, location.bottomLeft, "#FF0000");
           // this.drawLine(location.bottomLeft, location.topLeft, "#FF0000");
         }
-        console.log(`${first} | ${second} | ${third}`);
+        console.log(`${first} | ${second} | ${third} | ${fourth}`);
         // qr(video.data);
     }
   
