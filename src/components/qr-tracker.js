@@ -2,8 +2,8 @@ import foo from '../logic';
 
 AFRAME.registerComponent('qr-tracker', {
   init: function() {
-    // this.canvasElement = document.getElementById("overlayCanvas");
-    // this.canvas = this.canvasElement.getContext("2d");
+    this.canvasElement = document.getElementById("overlayCanvas");
+    this.canvas = this.canvasElement.getContext("2d");
 
     foo();
 
@@ -21,7 +21,8 @@ AFRAME.registerComponent('qr-tracker', {
   },
 
   tick: function() {
-    // var imageData = this.canvas.getImageData(0, 0, this.canvasElement.width, this.canvasElement.height);
+    var imageData = this.canvas.getImageData(0, 0, this.canvasElement.width, this.canvasElement.height);
+    var a = 1;
     // var code = jsQR(imageData.data, imageData.width, imageData.height);
 
     // if (code) {
