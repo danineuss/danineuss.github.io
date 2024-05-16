@@ -5,13 +5,15 @@
   "license": "MIT",
   "scripts": {
     "http": "budo --live --verbose --port 3000 --open",
-    "https": "budo --serve index.html --live --ssl --cert=localhost.pem --key=localhost-key.pem",
+    "https": "cd dist && budo --serve index.html --live --ssl --cert=localhost.pem --key=localhost-key.pem --open",
     "deploy": "ghpages",
     "ghpages": "ghpages"
   },
   "devDependencies": {
     "budo": "^11.8.4",
-    "ghpages": "^0.0.10"
+    "ghpages": "^0.0.10",
+    "parcel-bundler": "^1.12.5",
+    "typescript": "^5.4.5"
   },
   "keywords": [
     "aframe",
@@ -20,5 +22,9 @@
     "aframe-scene",
     "webvr",
     "vr"
-  ]
+  ],
+  "dependencies": {
+    "aframe": "^1.5.0",
+    "jsqr": "^1.4.0"
+  }
 }
