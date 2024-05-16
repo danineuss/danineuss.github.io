@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "http": "budo --live --verbose --port 3000 --open",
-    "https": "cd dist && budo --serve index.html --live --ssl --cert=localhost.pem --key=localhost-key.pem --open",
+    "https": "cd dist && budo --serve index.html --live --ssl --cert=localhost.pem --key=localhost-key.pem",
     "deploy": "ghpages",
     "ghpages": "ghpages"
   },
