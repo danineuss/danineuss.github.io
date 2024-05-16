@@ -1,4 +1,4 @@
-import foo from './logic';
+import foo from '../logic';
 
 AFRAME.registerComponent('qr-tracker', {
   init: function() {
