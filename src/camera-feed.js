@@ -15,12 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
   function tick() {
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvasElement.hidden = false;
-        canvasElement.height = video.videoHeight;
-        canvasElement.width = video.videoWidth;
+        canvasElement.height = window.innerHeight;
+        canvasElement.width = window.innerWidth;
         canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
     }
   
-    // Request next frame
     requestAnimationFrame(tick);
   }
 });
