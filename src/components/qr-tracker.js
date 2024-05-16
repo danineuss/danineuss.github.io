@@ -16,11 +16,11 @@ AFRAME.registerComponent('qr-tracker', {
   tick: function() {
     var imageData = this.canvas.getImageData(0, 0, this.canvasElement.width, this.canvasElement.height);
 
-    const isAllZero = !imageData.data.some(item => item !== 0);
+    // const isAllZero = !imageData.data.some(item => item !== 0);
 
-    if (isAllZero) {
-      return;
-    }
+    // if (isAllZero) {
+    //   return;
+    // }
 
     const binarizedBitMatrix = binarize(imageData.data, imageData.width, imageData.height, false);
     let locations = locate(binarizedBitMatrix.binarized);
