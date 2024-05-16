@@ -5,7 +5,7 @@
 // import { locate, BitMatrix } from "jsqr";
 // import { locate, BitMatrix } from "jsqr/dist/locator/";
 import { locate } from "../../libs/jsQR/locator"
-import { BitMatrix } from "../../libs/jsQR/BitMatrix";
+import { binarize } from "../../libs/jsQR/binarizer";
 
 AFRAME.registerComponent('qr-tracker', {
   init: function() {
@@ -15,11 +15,24 @@ AFRAME.registerComponent('qr-tracker', {
 
   tick: function() {
     var imageData = this.canvas.getImageData(0, 0, this.canvasElement.width, this.canvasElement.height);
-    var bitMatrix = new BitMatrix(imageData, imageData.width);
-    var location = locate(bitMatrix);
+
+    const isAllZero = !imageData.data.some(item => item !== 0);
+
+    if (isAllZero) {
+      return;
+    }
+
+    const binarizedBitMatrix = binarize(imageData.data, imageData.width, imageData.height, false);
+    let locations = locate(binarizedBitMatrix.binarized);
     
-    if (location){
-      console.log("found" + location[0].topLeft.x);
+    if (locations){
+      
+      let location = locations[0];
+      console.log(`Location: ${this.toString(location.topLeft)} ${this.toString(location.topRight)} ${this.toString(location.bottomLeft)}`);
+      // this.drawLine(location.topLeft, location.topRight, "#FF0000");
+      // this.drawLine(location.topRight, location.bottomRight, "#FF0000");
+      // this.drawLine(location.bottomRight, location.bottomLeft, "#FF0000");
+      // this.drawLine(location.bottomLeft, location.topLeft, "#FF0000");
     }
     // var code = jsQR(imageData.data, imageData.width, imageData.height);
 
@@ -32,5 +45,18 @@ AFRAME.registerComponent('qr-tracker', {
     // }
     
     // requestAnimationFrame(this.tick);
+  },
+
+  toString: function(point) {
+    return `(${point.x}|${point.y})`;
+  },
+
+  drawLine: function(begin, end, color) {
+    this.canvas.beginPath();
+    this.canvas.moveTo(begin.x, begin.y);
+    this.canvas.lineTo(end.x, end.y);
+    this.canvas.lineWidth = 4;
+    this.canvas.strokeStyle = color;
+    this.canvas.stroke();
   }
 });
