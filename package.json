@@ -24,6 +24,7 @@
     "vr"
   ],
   "dependencies": {
-    "aframe": "^1.5.0"
+    "aframe": "^1.5.0",
+    "jsqr": "^1.4.0"
   }
 }
