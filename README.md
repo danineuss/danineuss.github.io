@@ -2,8 +2,5 @@
 
 ## Run development
 
-### Run example
-
-- `cd ..`
-- `npm install`
-- `npm run http` / `npm run https` for launching the application
+- `npx parcel src/index.html`: builds ts into js and serves a local http instance
+- `npm run https`: serves the built js project as https

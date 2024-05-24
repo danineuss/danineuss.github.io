@@ -1,7 +1,11 @@
 import { Point, locate } from "../libs/jsQR/locator"
 import { binarize } from "../libs/jsQR/binarizer";
+import jsQR from "jsqr";
 
 var video = document.createElement("video");
+var total_ms = 0;
+var numberOfCountings = 0;
+var average_ms = 0;
 
 function toString(point: Point): string {
   return `(${point.x}|${point.y})`;
@@ -40,35 +44,36 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
         var first = performance.now() - start;
         sketch.drawImage(video, 0, 0, sketchElement.width, sketchElement.height);
-        var second = performance.now() - first - start;
+        var second = performance.now() - start;
         
-        var third = performance.now() - second - first - start;
+        var third = performance.now() - start;
         var imageData = sketch.getImageData(0, 0, sketchElement.width, sketchElement.height);
-        const binarizedBitMatrix = binarize(imageData.data, imageData.width, imageData.height, false);
-        let locations = locate(binarizedBitMatrix.binarized);
-        var fourth = performance.now() - third - second - first - start;
-
-        if (locations) {          
-          let location = locations[0];
+        var code = jsQR(imageData.data, sketchElement.width, sketchElement.height, {
+          inversionAttempts: "dontInvert",
+        });
+        var fourth = performance.now() - start;        
+        
+        if (code) {          
           let scaleWidth = canvasElement.width / sketchElement.width;
           let scaleHeight = canvasElement.height / sketchElement.height;
-          console.log(`Location: 
-            ${toString(location.topLeft)} 
-            ${toString(location.topRight)} 
-            ${toString(location.bottomLeft)}`);
-          drawLine(scalePoint(location.topLeft, scaleWidth, scaleHeight), scalePoint(location.topRight, scaleWidth, scaleHeight), "#FF0000");
-          drawLine(scalePoint(location.bottomLeft, scaleWidth, scaleHeight), scalePoint(location.topLeft, scaleWidth, scaleHeight), "#00FF00");
+          drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58", scaleWidth, scaleHeight);
+          drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58", scaleWidth, scaleHeight);
+          drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58", scaleWidth, scaleHeight);
+          drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58", scaleWidth, scaleHeight);
         }
-        console.log(`${first} | ${second} | ${third} | ${fourth}`);
+        total_ms += fourth;
+        numberOfCountings++;
+        average_ms = total_ms / numberOfCountings;
+        console.log(`${first} | ${second} | ${third} | ${fourth} || avg: ${average_ms.toFixed(2)}`);
     }
   
     requestAnimationFrame(tick);
   }
 
-  function drawLine(begin, end, color) {
+  function drawLine(begin: Point, end: Point, color: string, sx: number, sy: number) {
     canvas.beginPath();
-    canvas.moveTo(begin.x, begin.y);
-    canvas.lineTo(end.x, end.y);
+    canvas.moveTo(begin.x * sx, begin.y * sy);
+    canvas.lineTo(end.x * sx, end.y * sy);
     canvas.lineWidth = 4;
     canvas.strokeStyle = color;
     canvas.stroke();
