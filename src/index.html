@@ -4,16 +4,14 @@
     <meta charset="utf-8"/>
     <title>Cyber Funk Tracker</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
-    <script src="index.ts"></script>
-    <script src="camera-feed.ts"></script>
-    <script src="components/qr-tracker.js"></script>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script type="module" src="camera-feed.ts"></script>
   </head>
   <body>
     <h1>Hello, World!</h1>
     <canvas id="overlayCanvas" style='position:absolute; left:0px; top:0px;'></canvas>
     <canvas id="sketchPad" hidden="true"></canvas>
-    <a-scene>
+    <a-scene stats>
       <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
       <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
       <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
