@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "parcel src/index.html",
     "http": "budo --live --verbose --port 3000 --open",
-    "https": "cd dist && budo --serve index.html --live --ssl --cert=localhost.pem --key=localhost-key.pem",
+    "https": "cd dist && budo --serve index.html --live --ssl --cert=../localhost.pem --key=../localhost-key.pem",
     "deploy": "ghpages",
     "ghpages": "ghpages"
   },
