@@ -10,7 +10,6 @@
     "ghpages": "ghpages"
   },
   "devDependencies": {
-    "@types/three": "^0.165.0",
     "budo": "^11.8.4",
     "events": "^3.3.0",
     "ghpages": "^0.0.10",
@@ -28,6 +27,6 @@
     "vr"
   ],
   "dependencies": {
-    "aframe": "^1.5.0"
+    "aframe": "^1.6.0"
   }
 }
