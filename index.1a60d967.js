@@ -142,14 +142,14 @@
       this[globalName] = mainExports;
     }
   }
-})({"37lbe":[function(require,module,exports) {
+})({"5suos":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
 var HMR_USE_SSE = false;
-module.bundle.HMR_BUNDLE_ID = "8700b5e0b24d02d9";
+module.bundle.HMR_BUNDLE_ID = "b5e747771a60d967";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, HMR_USE_SSE, chrome, browser, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -583,58 +583,38 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
     });
 }
 
-},{}],"9JYdi":[function(require,module,exports) {
-AFRAME.registerComponent("angle-attribute-setter", {
+},{}],"4MrPa":[function(require,module,exports) {
+AFRAME.registerComponent("marker-state-animator", {
     schema: {
         markerId: {
             type: "string"
         },
-        angleSensor: {
+        stateToAnimationMapping: {
             type: "string"
-        },
-        component: {
-            type: "string"
-        },
-        attribute: {
-            type: "string"
-        },
-        attributeMin: {
-            type: "number"
-        },
-        attributeMax: {
-            type: "number"
-        },
-        angleMin: {
-            type: "number"
-        },
-        angleMax: {
-            type: "number"
         }
     },
     init: function() {
-        const readyEvent = this.data.angleSensor + "-ready";
+        this.mapping = JSON.parse(this.data.stateToAnimationMapping);
+        if (this.el.getAttribute("animation-mixer") == null) throw new Error('Expected to find "animation-mixer" on this entity.');
         // A-Frame doesn't guarantee init-order. This way we know that the sensor is initialized:
-        document.getElementById(this.data.markerId).addEventListener(readyEvent, (event)=>{
-            this.sensor = event.detail;
-            this.sensor.el.addEventListener("angle-found", (data)=>this.onAngleFound(data));
+        document.getElementById(this.data.markerId).addEventListener("marker-states-ready", (event)=>{
+            this.markerStates = event.detail.markerStates;
+            this.markerStates.el.addEventListener("state-changed", (data)=>this.onStateChanged(data));
         });
     },
-    onAngleFound: function(data) {
-        const angle = data.detail.angle;
-        let normalizedAngle = this.getNormalizedValue(angle);
-        this.setAttributeValue(normalizedAngle);
+    onStateChanged: function(data) {
+        if (data.detail.current == null) return;
+        const animationName = this.mapping[data.detail.current];
+        if (animationName) this.playAnimation(animationName);
     },
-    getNormalizedValue: function(angle) {
-        if (angle < this.data.angleMin) return 0;
-        if (angle > this.data.angleMax) return 1;
-        return (angle - this.data.angleMin) / (this.data.angleMax - this.data.angleMin);
-    },
-    setAttributeValue: function(normalizedValue) {
-        const value = this.data.attributeMin + normalizedValue * (this.data.attributeMax - this.data.attributeMin);
-        this.el.setAttribute(this.data.component, this.data.attribute, value);
+    playAnimation: function(animationName) {
+        this.el.setAttribute("animation-mixer", {
+            clip: animationName,
+            loop: "repeat"
+        });
     }
 });
 
-},{}]},["37lbe","9JYdi"], "9JYdi", "parcelRequire321e")
+},{}]},["5suos","4MrPa"], "4MrPa", "parcelRequire321e")
 
-//# sourceMappingURL=index.b24d02d9.js.map
+//# sourceMappingURL=index.1a60d967.js.map

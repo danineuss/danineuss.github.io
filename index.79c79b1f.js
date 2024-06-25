@@ -142,14 +142,14 @@
       this[globalName] = mainExports;
     }
   }
-})({"37lbe":[function(require,module,exports) {
+})({"2nchX":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
 var HMR_USE_SSE = false;
-module.bundle.HMR_BUNDLE_ID = "8700b5e0b24d02d9";
+module.bundle.HMR_BUNDLE_ID = "6246211e79c79b1f";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, HMR_USE_SSE, chrome, browser, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -583,58 +583,43 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
     });
 }
 
-},{}],"9JYdi":[function(require,module,exports) {
-AFRAME.registerComponent("angle-attribute-setter", {
+},{}],"hI2SV":[function(require,module,exports) {
+AFRAME.registerComponent("angle-between-markers", {
     schema: {
-        markerId: {
+        firstMarkerId: {
             type: "string"
         },
-        angleSensor: {
+        secondMarkerId: {
             type: "string"
-        },
-        component: {
-            type: "string"
-        },
-        attribute: {
-            type: "string"
-        },
-        attributeMin: {
-            type: "number"
-        },
-        attributeMax: {
-            type: "number"
-        },
-        angleMin: {
-            type: "number"
-        },
-        angleMax: {
-            type: "number"
         }
     },
     init: function() {
-        const readyEvent = this.data.angleSensor + "-ready";
-        // A-Frame doesn't guarantee init-order. This way we know that the sensor is initialized:
-        document.getElementById(this.data.markerId).addEventListener(readyEvent, (event)=>{
-            this.sensor = event.detail;
-            this.sensor.el.addEventListener("angle-found", (data)=>this.onAngleFound(data));
+        this.firstMarker = document.getElementById(this.data.firstMarkerId);
+        this.secondMarker = document.getElementById(this.data.secondMarkerId);
+        this.firstMarker.addEventListener("markerFound", ()=>{
+            this.firstMarkerFound = true;
+        });
+        this.firstMarker.addEventListener("markerLost", ()=>{
+            this.firstMarkerFound = false;
+        });
+        this.secondMarker.addEventListener("markerFound", ()=>{
+            this.secondMarkerFound = true;
+        });
+        this.secondMarker.addEventListener("markerLost", ()=>{
+            this.secondMarkerFound = false;
         });
     },
-    onAngleFound: function(data) {
-        const angle = data.detail.angle;
-        let normalizedAngle = this.getNormalizedValue(angle);
-        this.setAttributeValue(normalizedAngle);
-    },
-    getNormalizedValue: function(angle) {
-        if (angle < this.data.angleMin) return 0;
-        if (angle > this.data.angleMax) return 1;
-        return (angle - this.data.angleMin) / (this.data.angleMax - this.data.angleMin);
-    },
-    setAttributeValue: function(normalizedValue) {
-        const value = this.data.attributeMin + normalizedValue * (this.data.attributeMax - this.data.attributeMin);
-        this.el.setAttribute(this.data.component, this.data.attribute, value);
+    tick: function() {
+        if (!this.firstMarkerFound || !this.secondMarkerFound) return;
+        let firstMarkerQuaternion = this.firstMarker.object3D.quaternion.clone();
+        let secondMarkerQuaternion = this.secondMarker.object3D.quaternion.clone();
+        let angle = firstMarkerQuaternion.angleTo(secondMarkerQuaternion) * 180 / Math.PI;
+        this.el.emit("angle-found", {
+            angle: angle
+        });
     }
 });
 
-},{}]},["37lbe","9JYdi"], "9JYdi", "parcelRequire321e")
+},{}]},["2nchX","hI2SV"], "hI2SV", "parcelRequire321e")
 
-//# sourceMappingURL=index.b24d02d9.js.map
+//# sourceMappingURL=index.79c79b1f.js.map

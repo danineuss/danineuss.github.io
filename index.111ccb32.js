@@ -142,14 +142,14 @@
       this[globalName] = mainExports;
     }
   }
-})({"37lbe":[function(require,module,exports) {
+})({"gqdCn":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
 var HMR_USE_SSE = false;
-module.bundle.HMR_BUNDLE_ID = "8700b5e0b24d02d9";
+module.bundle.HMR_BUNDLE_ID = "162905d6111ccb32";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, HMR_USE_SSE, chrome, browser, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -583,7 +583,7 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
     });
 }
 
-},{}],"9JYdi":[function(require,module,exports) {
+},{}],"gAiOl":[function(require,module,exports) {
 AFRAME.registerComponent("angle-attribute-setter", {
     schema: {
         markerId: {
@@ -615,7 +615,7 @@ AFRAME.registerComponent("angle-attribute-setter", {
         const readyEvent = this.data.angleSensor + "-ready";
         // A-Frame doesn't guarantee init-order. This way we know that the sensor is initialized:
         document.getElementById(this.data.markerId).addEventListener(readyEvent, (event)=>{
-            this.sensor = event.detail;
+            this.sensor = event.detail.sensor;
             this.sensor.el.addEventListener("angle-found", (data)=>this.onAngleFound(data));
         });
     },
@@ -635,6 +635,6 @@ AFRAME.registerComponent("angle-attribute-setter", {
     }
 });
 
-},{}]},["37lbe","9JYdi"], "9JYdi", "parcelRequire321e")
+},{}]},["gqdCn","gAiOl"], "gAiOl", "parcelRequire321e")
 
-//# sourceMappingURL=index.b24d02d9.js.map
+//# sourceMappingURL=index.111ccb32.js.map

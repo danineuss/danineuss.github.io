@@ -6,24 +6,34 @@
     <link rel="stylesheet" href="/index.4d663569.css">
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/dev/aframe/build/aframe-ar.js"></script>
-    <script src="/index.4b53bcd5.js" defer=""></script>
-    <script src="/index.76244902.js" defer=""></script>
-    <script src="/index.b24d02d9.js" defer=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.4.0/dist/aframe-extras.min.js"></script>
+    <script src="/index.10c5d026.js" defer=""></script>
+    <script src="/index.79c79b1f.js" defer=""></script>
+    <script src="/index.7cacb40b.js" defer=""></script>
+    <script src="/index.111ccb32.js" defer=""></script>
+    <script src="/index.73c277b9.js" defer=""></script>
+    <script src="/index.1a60d967.js" defer=""></script>
+    <script src="/index.87ac3aff.js" defer=""></script>
   </head>
   <body style="margin: 0; overflow: hidden">
-    <a-scene embedded="" arjs="detectionMode: mono_and_matrix; matrixCodeType: 3x3;" light="defaultLightsEnabled: false" stats="">
+    <a-scene embedded="" arjs="detectionMode: mono_and_matrix; matrixCodeType: 3x3;" light="defaultLightsEnabled: false" renderer="logarithmicDepthBuffer: true" stats="">
       <a-assets>
         <a-asset-item id="office" src="/24-06-05_low-test-model_V02.glb"></a-asset-item>
+        <a-asset-item id="cube" src="/cube-animated_V01.glb"></a-asset-item>
       </a-assets>
-      <a-marker id="barcode-1" type="barcode" value="1">
+      <a-marker id="barcode-1" type="barcode" value="1" marker-angle-sensor="axis:y" marker-states="states: { &quot;one&quot;: {&quot;Min&quot;: 0, &quot;Max&quot;: 30}, &quot;two&quot;: {&quot;Min&quot;: 30, &quot;Max&quot;: 60}, &quot;three&quot;: { &quot;Min&quot;: 60, &quot;Max&quot;: 90} }">
         <a-box scale="0.3 0.5 0.7" color="red"></a-box>
       </a-marker>
       <a-marker id="barcode-2" type="barcode" value="2">
         <a-box scale="0.3 0.5 0.7" color="green"></a-box>
       </a-marker>
-      <a-entity gltf-model="#office" scale="0.6 0.6 0.6" rotation="0 -90 0" cyber-funk-marker="markerId: barcode-1"></a-entity>
-      <!-- <a-entity light="type: ambient; color: #BBB"></a-entity> -->
-      <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1" markers-angle-calculator="firstMarkerId:barcode-1; secondMarkerId:barcode-2" angle-attribute-setter="component: light; attribute: intensity; attributeMin: 0.3; attributeMax: 1.5; angleMin: 45; angleMax: 135;"></a-entity>
+      <!-- <a-entity 
+        gltf-model="#office" 
+        scale="0.6 0.6 0.6" 
+        rotation="0 -90 0" 
+        cyber-funk-state-marker='markerId: barcode-1; activeStates: one, three'></a-entity> -->
+      <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1" angle-attribute-setter="markerId: barcode-1;angleSensor: marker-angle-sensor;component: light; attribute: intensity; attributeMin: 0.3; attributeMax: 1.5; angleMin: 0; angleMax: 90;"></a-entity>
+      <a-entity scale="1 1 1" position="0 2 0" rotation="0 0 0" gltf-model="#cube" animation-mixer="" cyber-funk-marker="markerId: barcode-1" marker-state-animator="markerId: barcode-1; stateToAnimationMapping: { &quot;one&quot;: &quot;UpDown&quot;, &quot;two&quot;: &quot;SideToSide&quot; }"></a-entity>
       <a-entity camera=""></a-entity>
     </a-scene>
   </body>

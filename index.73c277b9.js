@@ -142,14 +142,14 @@
       this[globalName] = mainExports;
     }
   }
-})({"37lbe":[function(require,module,exports) {
+})({"kNB17":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
 var HMR_USE_SSE = false;
-module.bundle.HMR_BUNDLE_ID = "8700b5e0b24d02d9";
+module.bundle.HMR_BUNDLE_ID = "68ee084573c277b9";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, HMR_USE_SSE, chrome, browser, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -583,58 +583,55 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
     });
 }
 
-},{}],"9JYdi":[function(require,module,exports) {
-AFRAME.registerComponent("angle-attribute-setter", {
+},{}],"cN0di":[function(require,module,exports) {
+AFRAME.registerComponent("marker-states", {
     schema: {
-        markerId: {
+        states: {
             type: "string"
-        },
-        angleSensor: {
-            type: "string"
-        },
-        component: {
-            type: "string"
-        },
-        attribute: {
-            type: "string"
-        },
-        attributeMin: {
-            type: "number"
-        },
-        attributeMax: {
-            type: "number"
-        },
-        angleMin: {
-            type: "number"
-        },
-        angleMax: {
-            type: "number"
         }
     },
     init: function() {
-        const readyEvent = this.data.angleSensor + "-ready";
-        // A-Frame doesn't guarantee init-order. This way we know that the sensor is initialized:
-        document.getElementById(this.data.markerId).addEventListener(readyEvent, (event)=>{
-            this.sensor = event.detail;
-            this.sensor.el.addEventListener("angle-found", (data)=>this.onAngleFound(data));
+        this.states = JSON.parse(this.data.states);
+        this.validateStates();
+        this.currentState = null;
+        this.sensor = this.el.components["marker-angle-sensor"];
+        this.sensor.el.addEventListener("angle-found", (data)=>this.onAngleFound(data));
+        this.sensor.el.addEventListener("angle-lost", ()=>this.onAngleLost());
+        this.el.emit("marker-states-ready", {
+            markerStates: this
         });
+    },
+    validateStates: function() {
+        for (const [state, angles] of Object.entries(this.states)){
+            if (angles.Min == null || angles.Max == null) throw new Error(`Badly defined state at ${state}. Expected non-null "Min" and "Max" entries.`);
+        }
     },
     onAngleFound: function(data) {
         const angle = data.detail.angle;
-        let normalizedAngle = this.getNormalizedValue(angle);
-        this.setAttributeValue(normalizedAngle);
+        for (const [state, angles] of Object.entries(this.states))if (angle >= angles.Min && angle < angles.Max) {
+            if (this.currentState == state) continue;
+            this.updateState(state);
+        }
     },
-    getNormalizedValue: function(angle) {
-        if (angle < this.data.angleMin) return 0;
-        if (angle > this.data.angleMax) return 1;
-        return (angle - this.data.angleMin) / (this.data.angleMax - this.data.angleMin);
+    onAngleLost: function() {
+        this.updateState(null);
     },
-    setAttributeValue: function(normalizedValue) {
-        const value = this.data.attributeMin + normalizedValue * (this.data.attributeMax - this.data.attributeMin);
-        this.el.setAttribute(this.data.component, this.data.attribute, value);
+    updateState: function(newState) {
+        const previousState = this.currentState;
+        this.currentState = newState;
+        this.el.emit("state-changed", {
+            current: this.currentState,
+            previous: previousState
+        });
+    },
+    hasCurrentState: function() {
+        return this.currentState != null;
+    },
+    getCurrentState: function() {
+        return this.currentState;
     }
 });
 
-},{}]},["37lbe","9JYdi"], "9JYdi", "parcelRequire321e")
+},{}]},["kNB17","cN0di"], "cN0di", "parcelRequire321e")
 
-//# sourceMappingURL=index.b24d02d9.js.map
+//# sourceMappingURL=index.73c277b9.js.map
